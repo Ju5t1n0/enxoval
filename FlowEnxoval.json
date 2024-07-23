@@ -1,0 +1,310 @@
+[
+    {
+        "id": "b1b381aa0ff5c928",
+        "type": "tab",
+        "label": "Enxoval",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "950d31c922d639ec",
+        "type": "inject",
+        "z": "b1b381aa0ff5c928",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 300,
+        "y": 220,
+        "wires": [
+            [
+                "641d40081e0fd365"
+            ]
+        ]
+    },
+    {
+        "id": "f1face7b8e741861",
+        "type": "debug",
+        "z": "b1b381aa0ff5c928",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1060,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "641d40081e0fd365",
+        "type": "XLSX-to-json",
+        "z": "b1b381aa0ff5c928",
+        "name": "xlsx to json",
+        "filepath": "C:\\Users\\Leonel\\Desktop\\Enxoval.xlsx",
+        "rangecell": "A2:G200",
+        "columnkey": "",
+        "sheet": "Cozinha",
+        "x": 570,
+        "y": 220,
+        "wires": [
+            [
+                "4b31b0d2b48f5b2d"
+            ]
+        ]
+    },
+    {
+        "id": "4b31b0d2b48f5b2d",
+        "type": "function",
+        "z": "b1b381aa0ff5c928",
+        "name": "format data",
+        "func": "let rows = msg.payload;\n\n// Check if rows is an array and not empty\nif (!Array.isArray(rows) || rows.length === 0) {\n    node.error(\"No data found or data is not an array\", msg);\n    return null;\n}\n\n// Extract column names (topics) from the first object\nlet headers = Object.keys(rows[0]);\n\n// Initialize an array to store values for each row\nlet values = [headers];\n\n// Fill the values for each row\nrows.forEach(row => {\n    let rowValues = headers.map(header => row[header] || \"\"); // Handle missing values\n    values.push(rowValues);\n});\n\n// Prepare the payload\nmsg.payload = {\n    values: values\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 220,
+        "wires": [
+            [
+                "f1face7b8e741861",
+                "5c7a3a5ff1f5c98a"
+            ]
+        ]
+    },
+    {
+        "id": "5c7a3a5ff1f5c98a",
+        "type": "ui_template",
+        "z": "b1b381aa0ff5c928",
+        "group": "d6b1f3e0b4f4f1b6",
+        "name": "Excel Data",
+        "order": 1,
+        "width": 39,
+        "height": 15,
+        "format": "<table class=\"table\">\n    <thead>\n        <tr>\n            <th ng-repeat=\"header in msg.payload.values[0]\">{{header}}</th>\n        </tr>\n    </thead>\n    <tbody>\n        <tr ng-repeat=\"row in msg.payload.values.slice(1)\">\n            <td ng-repeat=\"(index, value) in row\">\n                <a ng-if=\"index === row.length - 1\" href=\"{{value}}\" target=\"_blank\">{{value}}</a>\n                <span ng-if=\"index !== row.length - 1\">{{value}}</span>\n            </td>\n        </tr>\n    </tbody>\n</table>",
+        "storeOutMessages": false,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 1060,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0da7bb7aac083eaa",
+        "type": "remote-access",
+        "z": "b1b381aa0ff5c928",
+        "confignode": "92b4ba4a2854a055",
+        "name": "",
+        "verbose": 0,
+        "x": 575,
+        "y": 420,
+        "wires": [
+            [],
+            []
+        ],
+        "l": false
+    },
+    {
+        "id": "3ce9bbca631bd0ab",
+        "type": "ui_spacer",
+        "z": "b1b381aa0ff5c928",
+        "name": "spacer",
+        "group": "d6b1f3e0b4f4f1b6",
+        "order": 2,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "ec53055d2166eff3",
+        "type": "ui_spacer",
+        "z": "b1b381aa0ff5c928",
+        "name": "spacer",
+        "group": "d6b1f3e0b4f4f1b6",
+        "order": 3,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "0f42165b962a396a",
+        "type": "ui_spacer",
+        "z": "b1b381aa0ff5c928",
+        "name": "spacer",
+        "group": "d6b1f3e0b4f4f1b6",
+        "order": 4,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "573a6f30a98cedd5",
+        "type": "ui_spacer",
+        "z": "b1b381aa0ff5c928",
+        "name": "spacer",
+        "group": "d6b1f3e0b4f4f1b6",
+        "order": 5,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "6bdb93a63912a0ca",
+        "type": "ui_spacer",
+        "z": "b1b381aa0ff5c928",
+        "name": "spacer",
+        "group": "d6b1f3e0b4f4f1b6",
+        "order": 6,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "4d28a15ba134a150",
+        "type": "ui_spacer",
+        "z": "b1b381aa0ff5c928",
+        "name": "spacer",
+        "group": "d6b1f3e0b4f4f1b6",
+        "order": 7,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "38e9ea03201732d6",
+        "type": "ui_spacer",
+        "z": "b1b381aa0ff5c928",
+        "name": "spacer",
+        "group": "d6b1f3e0b4f4f1b6",
+        "order": 8,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "90f58389c268522a",
+        "type": "ui_spacer",
+        "z": "b1b381aa0ff5c928",
+        "name": "spacer",
+        "group": "d6b1f3e0b4f4f1b6",
+        "order": 9,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "3acf07b3eb015077",
+        "type": "ui_spacer",
+        "z": "b1b381aa0ff5c928",
+        "name": "spacer",
+        "group": "d6b1f3e0b4f4f1b6",
+        "order": 10,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "5604e98475690d88",
+        "type": "ui_spacer",
+        "z": "b1b381aa0ff5c928",
+        "name": "spacer",
+        "group": "d6b1f3e0b4f4f1b6",
+        "order": 11,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "28f1119a5a4fb14c",
+        "type": "ui_spacer",
+        "z": "b1b381aa0ff5c928",
+        "name": "spacer",
+        "group": "d6b1f3e0b4f4f1b6",
+        "order": 12,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "05a14c4852515530",
+        "type": "ui_spacer",
+        "z": "b1b381aa0ff5c928",
+        "name": "spacer",
+        "group": "d6b1f3e0b4f4f1b6",
+        "order": 13,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "b8309f46343b5138",
+        "type": "ui_spacer",
+        "z": "b1b381aa0ff5c928",
+        "name": "spacer",
+        "group": "d6b1f3e0b4f4f1b6",
+        "order": 14,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "d0f6bb2bddaea89a",
+        "type": "ui_spacer",
+        "z": "b1b381aa0ff5c928",
+        "name": "spacer",
+        "group": "d6b1f3e0b4f4f1b6",
+        "order": 15,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "a04029449cb77c46",
+        "type": "ui_spacer",
+        "z": "b1b381aa0ff5c928",
+        "name": "spacer",
+        "group": "d6b1f3e0b4f4f1b6",
+        "order": 16,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "d6b1f3e0b4f4f1b6",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "ff06b9e1a167b1b6",
+        "order": 1,
+        "disp": true,
+        "width": 45,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "92b4ba4a2854a055",
+        "type": "remote-config",
+        "name": "Node-RED UI",
+        "host": "localhost",
+        "protocol": "http",
+        "port": "1880",
+        "baseurl": "/ui/#!/0?socketid=np7BXEmIAaq_TJazAAAH",
+        "instancehash": "k2hgg9c24wdlcm6k4erbw4bjba0yp39dt3jpe18a8s0xj757jb12f620vt4n2p4j",
+        "server": "nodered04.remote-red.com",
+        "region": "de"
+    },
+    {
+        "id": "ff06b9e1a167b1b6",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
